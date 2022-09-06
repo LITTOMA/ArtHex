@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using Android.Runtime;
+using CommunityToolkit.Maui.Views;
 using HexIO;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -102,7 +103,19 @@ public static partial class Utils
         {
             using var stream = await FileSystem.OpenAppPackageFileAsync($"Joystick.{game}.{arch}.bin");
             using var reader = new BinaryReader(stream);
-            var templateData = reader.ReadBytes((int)stream.Length);
+            int length = 0;
+#if ANDROID
+            if(stream is InputStreamInvoker isi)
+            {
+                length = isi.BaseInputStream.Available();
+            }
+#else
+            length = stream.Length;
+#endif
+            if (length == 0)
+                return string.Empty;
+
+            var templateData = reader.ReadBytes(length);
 
             using var templateStream = new MemoryStream(templateData);
             templateStream.Seek(offsetSize.Offset, SeekOrigin.Begin);

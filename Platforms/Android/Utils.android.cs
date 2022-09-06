@@ -8,9 +8,20 @@ namespace ArtHex
 {
     public static partial class Utils
     {
-        public static partial void SaveTextFile(string text)
+        public static async partial void SaveTextFile(string text)
         {
-            throw new NotImplementedException();
+            var fileName = $"Joystick-{DateTime.Now:yyyy-MM-dd}.hex";
+            var savePath = Path.Combine(FileSystem.CacheDirectory, fileName);
+            var saveDir = Path.GetDirectoryName(savePath);
+            if (!Directory.Exists(saveDir))
+                Directory.CreateDirectory(saveDir);
+
+            File.WriteAllText(savePath, text);
+            await Share.RequestAsync(new ShareFileRequest()
+            {
+                Title = fileName,
+                File = new ShareFile(savePath)
+            });
         }
     }
 }
