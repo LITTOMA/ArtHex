@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ArtHex.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ArtHex">
+    <ContentPage.Resources>
+        <local:PercentageConverter x:Key="PercentageConverter" />
+    </ContentPage.Resources>
+    <Grid Margin="8" RowDefinitions="Auto,*">
+        <VerticalStackLayout Grid.Row="0" Spacing="8">
+            <Image
+                HeightRequest="120"
+                Source="{Binding OriginImage}"
+                WidthRequest="320" />
+            <Image
+                HeightRequest="120"
+                Source="{Binding MonoImage}"
+                WidthRequest="320" />
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="1" Margin="8">
+            <VerticalStackLayout Spacing="8">
+                <Grid
+                    Padding="8"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="8"
+                    RowDefinitions="*,*"
+                    RowSpacing="8">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="图像抖动"
+                        VerticalOptions="Center"
+                        VerticalTextAlignment="Center" />
+
+                    <HorizontalStackLayout
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalOptions="StartAndExpand"
+                        VerticalOptions="Center">
+                        <Editor
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="End"
+                            Keyboard="Numeric"
+                            Text="{Binding Dither, Converter={StaticResource PercentageConverter}}" />
+                        <Label Text="%" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Slider
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Maximum="1"
+                        Minimum="0"
+                        Value="{Binding Dither}" />
+                </Grid>
+
+                <Line BackgroundColor="DimGrey" />
+
+                <Grid
+                    Padding="8"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="8"
+                    RowSpacing="8">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="游戏版本"
+                        VerticalOptions="Center"
+                        VerticalTextAlignment="Center" />
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalOptions="Fill"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding GameVersion}">
+                        <Picker.Items>
+                            <x:String>Splatoon 2</x:String>
+                            <x:String>Splatoon 3</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </Grid>
+
+                <Line BackgroundColor="DimGrey" />
+
+                <Grid
+                    Padding="8"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="8"
+                    RowSpacing="8">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="目标开发板"
+                        VerticalOptions="Center"
+                        VerticalTextAlignment="Center" />
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalOptions="Fill"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding TargetBoard}">
+                        <Picker.Items>
+                            <x:String>Teensy 2.0++</x:String>
+                            <x:String>Arduino UNO R3</x:String>
+                            <x:String>Arduino Micro</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </Grid>
+
+                <Line BackgroundColor="DimGrey" />
+
+                <Grid
+                    Padding="8"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="8"
+                    RowSpacing="8">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="记住我的设置"
+                        VerticalOptions="Center"
+                        VerticalTextAlignment="Center" />
+                    <CheckBox Grid.Column="1" IsChecked="{Binding SaveConfigs}" />
+                </Grid>
+
+                <Button Command="{Binding ChooseImageCommand}" Text="选择图像" />
+                <Button Command="{Binding MakeHexCommand}" Text="生成 Hex" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
