@@ -127,10 +127,11 @@ public static partial class Utils
             IntelHexStreamWriter hexStreamWriter = new IntelHexStreamWriter(hexStream);
             while (true)
             {
+                var position = (ushort)templateStream.Position;
                 var line = templateReader.ReadBytes(16);
                 if (line.Length == 0)
                     break;
-                hexStreamWriter.WriteDataRecord((ushort)templateStream.Position, line);
+                hexStreamWriter.WriteDataRecord(position, line);
             }
 
             hexStreamWriter.Close();
