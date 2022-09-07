@@ -14,7 +14,7 @@ namespace ArtHex.WinUI;
 public partial class App : MauiWinUIApplication
 {
     private readonly int WindowWidth = 400;
-    private readonly int WindowHeight = 720;
+    private readonly int WindowHeight = 760;
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
