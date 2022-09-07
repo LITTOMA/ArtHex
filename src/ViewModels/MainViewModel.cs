@@ -1,11 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArtHex
 {
@@ -116,10 +111,9 @@ namespace ArtHex
             using var originStream = new MemoryStream();
             image.SaveAsPng(originStream);
             originImageData = originStream.ToArray();
-            originStream.Position = 0;
             OriginImage = new StreamImageSource()
             {
-                Stream = async (ct) => originStream
+                Stream = async (ct) => new MemoryStream(originImageData)
             };
 
             OnDitherChanged(Dither);

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ArtHex.ImageEditorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:ArtHex.Controls"
+    Title="Image Editor">
+    <controls:PinchToZoomContainer>
+        <Image Source="https://docs.microsoft.com/en-us/dotnet/maui/user-interface/controls/shapes/media/line/line.png" />
+    </controls:PinchToZoomContainer>
+</ContentPage>
