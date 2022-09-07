@@ -3,20 +3,90 @@
     x:Class="ArtHex.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ArtHex">
+    xmlns:local="clr-namespace:ArtHex"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
     <ContentPage.Resources>
         <local:PercentageConverter x:Key="PercentageConverter" />
+        <toolkit:IsEqualConverter x:Key="IsEqualConverter" />
+        <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
     </ContentPage.Resources>
     <Grid Margin="8" RowDefinitions="Auto,*">
         <VerticalStackLayout Grid.Row="0" Spacing="8">
-            <Image
-                HeightRequest="120"
-                Source="{Binding OriginImage}"
-                WidthRequest="320" />
-            <Image
-                HeightRequest="120"
-                Source="{Binding MonoImage}"
-                WidthRequest="320" />
+            <Grid>
+                <Border
+                    HeightRequest="120"
+                    StrokeDashArray="5,0,5"
+                    WidthRequest="320">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5" />
+                    </Border.StrokeShape>
+                    <Button
+                        BackgroundColor="Transparent"
+                        Command="{Binding ChooseImageCommand}"
+                        CornerRadius="5"
+                        FontFamily="CascadiaCode"
+                        HorizontalOptions="Fill"
+                        Text="选择图片"
+                        TextColor="Gray"
+                        VerticalOptions="Fill" />
+                </Border>
+                <Image
+                    HeightRequest="120"
+                    IsVisible="{Binding OriginImage, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Null}}"
+                    Source="{Binding OriginImage}"
+                    WidthRequest="320">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ImageOptionsCommand}" NumberOfTapsRequired="1" />
+                        <TapGestureRecognizer Command="{Binding ChooseImageCommand}" NumberOfTapsRequired="2" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Grid
+                    BackgroundColor="Transparent"
+                    ColumnDefinitions="*,*"
+                    HeightRequest="120"
+                    HorizontalOptions="FillAndExpand"
+                    IsVisible="{Binding ImageOptionsIsVisible}"
+                    VerticalOptions="Center"
+                    WidthRequest="320">
+                    <Button
+                        Grid.Column="0"
+                        BackgroundColor="#B5828282"
+                        Command="{Binding ChooseImageCommand}"
+                        HorizontalOptions="Fill"
+                        Text="重新选择图片"
+                        TextColor="White"
+                        VerticalOptions="Fill" />
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="#B5828282"
+                        HorizontalOptions="Fill"
+                        Text="编辑图片"
+                        TextColor="White"
+                        VerticalOptions="Fill" />
+                </Grid>
+            </Grid>
+            <Grid>
+                <Border
+                    HeightRequest="120"
+                    StrokeDashArray="5,0,5"
+                    WidthRequest="320">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5" />
+                    </Border.StrokeShape>
+                    <Label
+                        BackgroundColor="Transparent"
+                        FontFamily="CascadiaCode"
+                        HorizontalOptions="Center"
+                        Text="暂无预览"
+                        TextColor="Gray"
+                        VerticalOptions="Center" />
+                </Border>
+                <Image
+                    HeightRequest="120"
+                    IsVisible="{Binding MonoImage, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Null}}"
+                    Source="{Binding MonoImage}"
+                    WidthRequest="320" />
+            </Grid>
         </VerticalStackLayout>
 
         <ScrollView Grid.Row="1" Margin="8">
@@ -127,7 +197,6 @@
                     <CheckBox Grid.Column="1" IsChecked="{Binding SaveConfigs}" />
                 </Grid>
 
-                <Button Command="{Binding ChooseImageCommand}" Text="选择图像" />
                 <Button Command="{Binding MakeHexCommand}" Text="生成 Hex" />
             </VerticalStackLayout>
         </ScrollView>

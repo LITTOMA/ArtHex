@@ -78,6 +78,9 @@ namespace ArtHex
         [ObservableProperty]
         private bool saveConfigs;
 
+        [ObservableProperty]
+        private bool imageOptionsIsVisible;
+
         private byte[] originImageData;
         private SixLabors.ImageSharp.Image currentImage;
 
@@ -120,6 +123,17 @@ namespace ArtHex
             };
 
             OnDitherChanged(Dither);
+        }
+
+        [RelayCommand]
+        private void ImageOptions()
+        {
+            ImageOptionsIsVisible = true;
+            Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                ImageOptionsIsVisible = false;
+            });
         }
 
         [RelayCommand]
