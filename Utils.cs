@@ -1,10 +1,7 @@
-﻿using Android.Runtime;
-using CommunityToolkit.Maui.Views;
-using HexIO;
+﻿using HexIO;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
-using System.Diagnostics;
 
 namespace ArtHex;
 
@@ -105,12 +102,12 @@ public static partial class Utils
             using var reader = new BinaryReader(stream);
             int length = 0;
 #if ANDROID
-            if(stream is InputStreamInvoker isi)
+            if(stream is Android.Runtime.InputStreamInvoker isi)
             {
                 length = isi.BaseInputStream.Available();
             }
 #else
-            length = stream.Length;
+            length = (int)stream.Length;
 #endif
             if (length == 0)
                 return string.Empty;
