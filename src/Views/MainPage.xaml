@@ -40,30 +40,33 @@
                         <TapGestureRecognizer Command="{Binding ChooseImageCommand}" NumberOfTapsRequired="2" />
                     </Image.GestureRecognizers>
                 </Image>
-                <Grid
+                <!--<Grid
                     BackgroundColor="Transparent"
                     ColumnDefinitions="*,*"
                     HeightRequest="120"
                     HorizontalOptions="FillAndExpand"
                     IsVisible="{Binding ImageOptionsIsVisible}"
                     VerticalOptions="Center"
-                    WidthRequest="320">
-                    <Button
-                        Grid.Column="0"
-                        BackgroundColor="#B5828282"
-                        Command="{Binding ChooseImageCommand}"
-                        HorizontalOptions="Fill"
-                        Text="重新选择图片"
-                        TextColor="White"
-                        VerticalOptions="Fill" />
-                    <Button
+                    WidthRequest="320">-->
+                <Button
+                    Grid.Column="0"
+                    BackgroundColor="#B5828282"
+                    Command="{Binding ChooseImageCommand}"
+                    HeightRequest="120"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding ImageOptionsIsVisible}"
+                    Text="重新选择图片"
+                    TextColor="White"
+                    VerticalOptions="Fill"
+                    WidthRequest="320" />
+                <!--<Button
                         Grid.Column="1"
                         BackgroundColor="#B5828282"
                         HorizontalOptions="Fill"
                         Text="编辑图片"
                         TextColor="White"
-                        VerticalOptions="Fill" />
-                </Grid>
+                        VerticalOptions="Fill" />-->
+                <!--</Grid>-->
             </Grid>
             <Grid>
                 <Border

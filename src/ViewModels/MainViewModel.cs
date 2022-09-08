@@ -125,7 +125,7 @@ namespace ArtHex
             ImageOptionsIsVisible = true;
             Task.Run(async () =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(1));
                 ImageOptionsIsVisible = false;
             });
         }
