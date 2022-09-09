@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ArtHex.Controls;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
 
@@ -106,6 +108,13 @@ namespace ArtHex
             if (file == null) return;
 
             var image = SixLabors.ImageSharp.Image.Load(await file.OpenReadAsync());
+
+            if (image.Width != 320 || image.Height != 120)
+            {
+                MessagePopup popup = new($"Invalid image width({image.Width}) or height({image.Height})");
+                await Shell.Current.ShowPopupAsync(popup);
+                return;
+            }
 
             // save a copy of the image.
             using var originStream = new MemoryStream();
