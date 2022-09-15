@@ -32,7 +32,9 @@ public partial class App : MauiWinUIApplication
             IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
             WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
             AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-            appWindow.Resize(new SizeInt32(WindowWidth, WindowHeight));
+            var dpi = PInvoke.User32.GetDpiForWindow(windowHandle);
+            float scalingFactor = (float)dpi / 96;
+            appWindow.Resize(new SizeInt32((int)(WindowWidth * scalingFactor), (int)(WindowHeight * scalingFactor)));
         });
     }
 
