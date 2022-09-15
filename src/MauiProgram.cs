@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Maui;
+﻿using ArtHex.Services;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ArtHex;
 
@@ -17,6 +19,7 @@ public static class MauiProgram
 				fonts.AddFont("CascadiaCode.ttf", "CascadiaCode");
 			});
 
+		builder.Services.AddSingleton<AppService>();
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MainViewModel>();
 

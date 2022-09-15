@@ -64,7 +64,9 @@
 	  <PackageReference Include="CommunityToolkit.Maui" Version="1.2.0" />
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 	  <PackageReference Include="HexIO" Version="3.0.3" />
+	  <PackageReference Include="PInvoke.User32" Version="0.7.124" />
 	  <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+	  <PackageReference Include="SQLite" Version="3.13.0" />
 	</ItemGroup>
 
 	<ItemGroup>
