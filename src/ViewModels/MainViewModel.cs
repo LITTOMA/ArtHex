@@ -1,17 +1,26 @@
 ﻿using ArtHex.Controls;
+using ArtHex.Models;
+using ArtHex.Services;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SixLabors.ImageSharp;
+using System.Collections.ObjectModel;
 
 namespace ArtHex
 {
     [INotifyPropertyChanged]
     public partial class MainViewModel
     {
-        public MainViewModel()
+        public MainViewModel(DataService dataService)
         {
+            this.dataService = dataService;
+
+            flashDataInfos = dataService.GetAllFlashDataInfos();
+            GameNames = new(flashDataInfos.Select(info => info.GameName).Distinct());
+
             LoadConfigs();
+
             PropertyChanged += MainViewModel_PropertyChanged;
         }
 
@@ -26,13 +35,13 @@ namespace ArtHex
             if (SaveConfigs)
             {
                 Preferences.Set(nameof(Dither), Dither);
-                Preferences.Set(nameof(GameVersion), GameVersion);
+                Preferences.Set(nameof(GameName), GameName);
                 Preferences.Set(nameof(TargetBoard), TargetBoard);
             }
             else
             {
                 Preferences.Remove(nameof(Dither));
-                Preferences.Remove(nameof(GameVersion));
+                Preferences.Remove(nameof(GameName));
                 Preferences.Remove(nameof(TargetBoard));
             }
         }
@@ -43,13 +52,13 @@ namespace ArtHex
             if (SaveConfigs)
             {
                 Dither = Preferences.Get(nameof(Dither), 0.6f);
-                GameVersion = Preferences.Get(nameof(GameVersion), "Splatoon 2");
+                GameName = Preferences.Get(nameof(GameName), "Splatoon 2");
                 TargetBoard = Preferences.Get(nameof(TargetBoard), "Teensy 2.0++");
             }
             else
             {
                 Dither = 0.6f;
-                GameVersion = "Splatoon 2";
+                GameName = "Splatoon 2";
                 TargetBoard = "Teensy 2.0++";
             }
         }
@@ -67,7 +76,7 @@ namespace ArtHex
         private string hex;
 
         [ObservableProperty]
-        private string gameVersion;
+        private string gameName;
 
         [ObservableProperty]
         private string targetBoard;
@@ -78,8 +87,16 @@ namespace ArtHex
         [ObservableProperty]
         private bool imageOptionsIsVisible;
 
+        [ObservableProperty]
+        private ObservableCollection<string> gameNames;
+
+        [ObservableProperty]
+        private ObservableCollection<string> boardNames;
+
         private byte[] originImageData;
         private SixLabors.ImageSharp.Image currentImage;
+        private IEnumerable<FlashDataInfo> flashDataInfos;
+        private readonly DataService dataService;
 
         partial void OnDitherChanged(float value)
         {
@@ -99,6 +116,14 @@ namespace ArtHex
                     return imageStream;
                 }
             };
+        }
+
+        partial void OnGameNameChanged(string value)
+        {
+            if (flashDataInfos != null)
+            {
+                BoardNames = new ObservableCollection<string>(flashDataInfos.Where(info => info.GameName == value).Select(info => info.BoardName));
+            }
         }
 
         [RelayCommand]
@@ -144,7 +169,7 @@ namespace ArtHex
         {
             if (currentImage != null)
             {
-                Hex = await Utils.MakeHexAsync(currentImage, TargetBoard, GameVersion.ToLower().Replace(" ", ""));
+                Hex = await Utils.MakeHexAsync(currentImage, dataService.GetFlashData(GameName, TargetBoard));
                 Utils.SaveTextFile(Hex);
             }
         }

@@ -1,4 +1,5 @@
-﻿using HexIO;
+﻿using ArtHex.Models;
+using HexIO;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
@@ -7,18 +8,18 @@ namespace ArtHex;
 
 public static partial class Utils
 {
-    static Dictionary<string, (int Offset, int Size)> ImageDataOffsetSize = new Dictionary<string, (int Offset, int Size)>
-    {
-        { "at90usb1286", new(){ Offset=0x185, Size=4800 } },
-        { "atmega16u2",  new(){ Offset=0x185, Size=4800 } },
-        { "atmega32u4",  new(){ Offset=0x185, Size=4800 } },
-    };
-    static Dictionary<string, string> BoardArchitechture = new Dictionary<string, string>
-    {
-        { "Teensy 2.0++",   "at90usb1286" },
-        { "Arduino UNO R3", "atmega16u2"  },
-        { "Arduino Micro",  "atmega32u4"  },
-    };
+    //static Dictionary<string, (int Offset, int Size)> ImageDataOffsetSize = new Dictionary<string, (int Offset, int Size)>
+    //{
+    //    { "at90usb1286", new(){ Offset=0x185, Size=4800 } },
+    //    { "atmega16u2",  new(){ Offset=0x185, Size=4800 } },
+    //    { "atmega32u4",  new(){ Offset=0x185, Size=4800 } },
+    //};
+    //static Dictionary<string, string> BoardArchitechture = new Dictionary<string, string>
+    //{
+    //    { "Teensy 2.0++",   "at90usb1286" },
+    //    { "Arduino UNO R3", "atmega16u2"  },
+    //    { "Arduino Micro",  "atmega32u4"  },
+    //};
 
     public static void ProcessImage(SixLabors.ImageSharp.Image image, float ditherScale)
     {
@@ -41,7 +42,7 @@ public static partial class Utils
         });
     }
 
-    public static async Task<string> MakeHexAsync(SixLabors.ImageSharp.Image image, string arch, string game)
+    public static async Task<string> MakeHexAsync(SixLabors.ImageSharp.Image image, FlashData flashData)
     {
         if (image.Width != 320 || image.Height != 120)
         {
@@ -76,46 +77,17 @@ public static partial class Utils
                 }
             }
         });
-        return await MakeHexAsync(imageData, arch, game);
+        return await MakeHexAsync(imageData, flashData);
     }
 
-    public static async Task<string> MakeHexAsync(ReadOnlyMemory<byte> imagePixelData, string arch, string game)
+    public static async Task<string> MakeHexAsync(ReadOnlyMemory<byte> imagePixelData, FlashData flashData)
     {
-        if (!ImageDataOffsetSize.ContainsKey(arch))
-        {
-            if (!BoardArchitechture.ContainsKey(arch))
-            {
-                throw new NotSupportedException($"Unsupported board/arch: {arch}");
-            }
-            arch = BoardArchitechture[arch];
-        }
-
-        var offsetSize = ImageDataOffsetSize[arch];
-        if (imagePixelData.Length > offsetSize.Size)
-        {
-            return string.Empty;
-        }
-
         try
         {
-            using var stream = await FileSystem.OpenAppPackageFileAsync($"Joystick.{game}.{arch}.bin");
-            using var reader = new BinaryReader(stream);
-            int length = 0;
-#if ANDROID
-            if(stream is Android.Runtime.InputStreamInvoker isi)
-            {
-                length = isi.BaseInputStream.Available();
-            }
-#else
-            length = (int)stream.Length;
-#endif
-            if (length == 0)
-                return string.Empty;
-
-            var templateData = reader.ReadBytes(length);
+            var templateData = flashData.Binary;
 
             using var templateStream = new MemoryStream(templateData);
-            templateStream.Seek(offsetSize.Offset, SeekOrigin.Begin);
+            templateStream.Seek(flashData.ImageDataOffset, SeekOrigin.Begin);
             templateStream.Write(imagePixelData.Span);
             templateStream.Seek(0, SeekOrigin.Begin);
 

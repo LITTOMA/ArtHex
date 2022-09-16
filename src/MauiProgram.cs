@@ -19,6 +19,7 @@ public static class MauiProgram
 				fonts.AddFont("CascadiaCode.ttf", "CascadiaCode");
 			});
 
+		builder.Services.AddSingleton<DataService>();
 		builder.Services.AddSingleton<AppService>();
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MainViewModel>();

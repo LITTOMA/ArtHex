@@ -5,14 +5,13 @@ namespace ArtHex.Services
 {
     public class AppService
     {
-        public AppService()
-        {
-            appDatabase = new SQLite.SQLiteConnection(Path.Combine(FileSystem.AppDataDirectory, "app.db"));
-            appDatabase.CreateTable<FlashData>();
-        }
-
-        SQLite.SQLiteConnection appDatabase;
+        private readonly DataService dataService;
         public bool IsAppInitialized => Preferences.Get(nameof(IsAppInitialized), false);
+
+        public AppService(DataService dataService)
+        {
+            this.dataService = dataService;
+        }
 
         public async void InitializeApp()
         {
@@ -23,7 +22,7 @@ namespace ArtHex.Services
                 var reader = new StreamReader(stream);
                 var data = await reader.ReadToEndAsync();
                 List<FlashData> flashDatas = JsonSerializer.Deserialize<List<FlashData>>(data);
-                appDatabase.InsertAll(flashDatas);
+                dataService.AddFlashDatas(flashDatas);
 
                 // Update the flag.
                 Preferences.Set(nameof(IsAppInitialized), true);

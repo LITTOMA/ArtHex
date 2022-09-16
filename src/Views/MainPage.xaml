@@ -3,10 +3,12 @@
     x:Class="ArtHex.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:ArtHex.Converters"
     xmlns:local="clr-namespace:ArtHex"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
     <ContentPage.Resources>
-        <local:PercentageConverter x:Key="PercentageConverter" />
+        <converters:PercentageConverter x:Key="PercentageConverter" />
+        <converters:DistincCollectionConverter x:Key="DistincCollectionConverter" />
         <toolkit:IsEqualConverter x:Key="IsEqualConverter" />
         <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
     </ContentPage.Resources>
@@ -131,13 +133,9 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         HorizontalOptions="Fill"
+                        ItemsSource="{Binding GameNames}"
                         SelectedIndex="0"
-                        SelectedItem="{Binding GameVersion}">
-                        <Picker.Items>
-                            <x:String>Splatoon 2</x:String>
-                            <x:String>Splatoon 3</x:String>
-                        </Picker.Items>
-                    </Picker>
+                        SelectedItem="{Binding GameName}" />
                 </Grid>
 
                 <Line BackgroundColor="DimGrey" />
@@ -158,14 +156,9 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         HorizontalOptions="Fill"
+                        ItemsSource="{Binding BoardNames}"
                         SelectedIndex="0"
-                        SelectedItem="{Binding TargetBoard}">
-                        <Picker.Items>
-                            <x:String>Teensy 2.0++</x:String>
-                            <x:String>Arduino UNO R3</x:String>
-                            <x:String>Arduino Micro</x:String>
-                        </Picker.Items>
-                    </Picker>
+                        SelectedItem="{Binding TargetBoard}" />
                 </Grid>
 
                 <Line BackgroundColor="DimGrey" />
